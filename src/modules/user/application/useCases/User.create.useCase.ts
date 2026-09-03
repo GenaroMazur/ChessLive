@@ -5,6 +5,8 @@ import UserRepository from "../../domain/interfaces/User.repository"
 import EncryptService from "../../domain/interfaces/Encrypt.service"
 import { uuidv7 } from "uuidv7"
 import UserValidationException from "../../domain/exceptions/User.validation.exception"
+import {UserRatingType} from "../../domain/enums/User.Rating.Type.enum";
+import UserRating from "../../domain/entity/User.Rating";
 
 @injectable()
 export default class UserCreateUseCase {
@@ -25,6 +27,10 @@ export default class UserCreateUseCase {
             firstName: dto.firstName,
             lastName: dto.lastName,
         }
+        Object.values(UserRatingType).forEach((type) => {
+            if(!user.ratings) user.ratings = {} as any
+            user.ratings[type] = new UserRating()
+        })
 
         const [existsEmail, existsUsername] = await Promise.all([
             this.userRepository.findByEmail(dto.email),

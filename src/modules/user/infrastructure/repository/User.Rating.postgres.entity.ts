@@ -36,10 +36,7 @@ export default class UserRatingPostgresEntity {
     @Column({ type: "int", default: 0 })
     draw: number
 
-    @ManyToOne(() => UserPostgresEntity, (user) => user.ratings, {
-        onDelete: "CASCADE",
-        cascade: true,
-    })
+    @ManyToOne(() => UserPostgresEntity, (user) => user.ratings)
     @JoinColumn({ name: "user_id" })
     user: UserPostgresEntity
 
@@ -55,9 +52,10 @@ export default class UserRatingPostgresEntity {
         )
     }
 
-    static toEntity(type: UserRatingType, domain: UserRating): UserRatingPostgresEntity {
+    static toEntity(type: UserRatingType, userId:string, domain: UserRating): UserRatingPostgresEntity {
         const entity = new UserRatingPostgresEntity()
 
+        entity.user_id = userId
         entity.type = type
         entity.rating = domain.rating
         entity.rd = domain.rd

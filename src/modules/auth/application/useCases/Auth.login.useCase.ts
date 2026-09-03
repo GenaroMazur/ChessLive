@@ -35,6 +35,6 @@ export default class AuthLoginUseCase {
 
         await this.sessionRepository.save(session)
 
-        return { session, refreshToken }
+        return { session, refreshToken, user }
     }
 }

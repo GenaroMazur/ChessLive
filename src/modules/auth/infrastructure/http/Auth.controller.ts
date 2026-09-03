@@ -1,4 +1,4 @@
-import { inject, injectable } from "tsyringe"
+import {inject, injectable} from "tsyringe"
 import ControllerBuilder from "../../../../shared/utils/controllerBuilder"
 import AuthLoginUseCase from "../../application/useCases/Auth.login.useCase"
 import AuthRegisterUseCase from "../../application/useCases/Auth.register.useCase"
@@ -17,10 +17,11 @@ export default class AuthController {
         @inject(AuthRefreshUseCase) private readonly refreshUseCase: AuthRefreshUseCase,
         @inject(AuthLogoutUseCase) private readonly logoutUseCase: AuthLogoutUseCase,
         @inject(TokenJwt) private readonly tokenJwt: TokenJwt,
-    ) {}
+    ) {
+    }
 
-    readonly login = ControllerBuilder(async ({ body, ip, headers }, res) => {
-        const { session, refreshToken } = await this.loginUseCase.execute(new AuthLoginDto(body))
+    readonly login = ControllerBuilder(async ({body, ip, headers}, res) => {
+        const {session, refreshToken, user} = await this.loginUseCase.execute(new AuthLoginDto(body))
 
         const context = new Context()
 
@@ -47,17 +48,17 @@ export default class AuthController {
             expires: context.sessionExpire,
         })
 
-        return context
+        return {context, user}
     })
-    readonly register = ControllerBuilder(async ({ body }, res) => {
+    readonly register = ControllerBuilder(async ({body}, res) => {
         res.statusCode = 201
         return await this.registerUseCase.execute(new UserCreateDto(body))
     })
 
-    readonly refresh = ControllerBuilder(async ({ cookies, ip, headers }, res) => {
+    readonly refresh = ControllerBuilder(async ({cookies, ip, headers}, res) => {
         const actualRefreshToken = cookies.refresh_token
 
-        const { session, refreshToken } = await this.refreshUseCase.execute(actualRefreshToken)
+        const {session, refreshToken} = await this.refreshUseCase.execute(actualRefreshToken)
 
         const context = new Context()
 
@@ -87,7 +88,7 @@ export default class AuthController {
         return context
     })
 
-    logout = ControllerBuilder(async ({ cookies }, res) => {
+    logout = ControllerBuilder(async ({cookies}, res) => {
         const actualRefreshToken = cookies.refresh_token
 
         await this.logoutUseCase.execute(actualRefreshToken)

@@ -34,7 +34,7 @@ export default class UserPostgresEntity {
         avatarUrl?: string
     }
 
-    @OneToMany(() => UserRatingPostgresEntity, (rating) => rating.user)
+    @OneToMany(() => UserRatingPostgresEntity, (rating) => rating.user, {cascade:true})
     ratings: UserRatingPostgresEntity[]
 
     @CreateDateColumn({ name: "created_at" })
@@ -56,6 +56,7 @@ export default class UserPostgresEntity {
         user.profile = entity.profile
 
         entity.ratings.forEach((rating) => {
+            if(!user.ratings) user.ratings = {} as any
             user.ratings[rating.type] = UserRatingPostgresEntity.toDomain(rating)
         })
 
@@ -76,7 +77,7 @@ export default class UserPostgresEntity {
 
         user.ratings = domain.ratings
             ? Object.entries(domain.ratings).map(([type, rating]) =>
-                  UserRatingPostgresEntity.toEntity(type as UserRatingType, rating),
+                  UserRatingPostgresEntity.toEntity(type as UserRatingType, user.id, rating),
               )
             : []
 
