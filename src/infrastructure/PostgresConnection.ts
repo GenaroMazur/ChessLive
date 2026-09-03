@@ -1,6 +1,6 @@
-import {DataSource} from "typeorm"
-import {container, inject, injectable} from "tsyringe";
-import {ILogger} from "../shared/utils/logger";
+import { DataSource } from "typeorm"
+import { inject, injectable } from "tsyringe"
+import { ILogger } from "../shared/utils/logger"
 
 const isProduction = process.env?.NODE_ENV?.toLowerCase() === "production"
 
@@ -15,7 +15,7 @@ export default class PostgresConnection {
             url: DATABASE_URL,
             synchronize: !isProduction,
             logging: false,
-            entities: [__dirname + "/../../modules/**/*.entity{.js,.ts}"],
+            entities: [__dirname + "/../modules/**/*.entity{.js,.ts}"],
             applicationName: "backend-benefits",
         })
         this.logger = logger.child("POSTGRES_CONNECTION")
@@ -31,5 +31,3 @@ export default class PostgresConnection {
         this.logger.info("Postgres: Closed")
     }
 }
-
-container.registerSingleton(PostgresConnection)

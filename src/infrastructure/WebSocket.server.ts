@@ -1,9 +1,9 @@
-import {Server, WebSocket} from "ws"
+import { Server, WebSocket } from "ws"
 import HttpServer from "./Server"
-import {EventEmitter} from "node:events"
-import {ILogger} from "../shared/utils/logger"
-import {IncomingMessage} from "node:http"
-import {container, inject, injectable} from "tsyringe";
+import { EventEmitter } from "node:events"
+import { ILogger } from "../shared/utils/logger"
+import { IncomingMessage } from "node:http"
+import { container, inject, injectable } from "tsyringe"
 import Client from "./handlers/websocket/Client"
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -36,7 +36,6 @@ export default class WebSocketServer extends EventEmitter<{
                 }
 
                 done(true) // Permite la conexión
-
             },
         })
 

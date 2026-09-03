@@ -1,4 +1,4 @@
-import {logger} from "./logger"
+import { logger } from "./logger"
 import Core from "../../infrastructure/Core"
 
 export function CloseProcessCallback(applicationModule: Core) {

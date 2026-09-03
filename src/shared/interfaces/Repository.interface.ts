@@ -1,7 +1,7 @@
-export default interface RepositoryInterface<T> {
-    save(entity: T): Promise<T>
+export default interface IRepository<T> {
+    save(domain: T): Promise<T>
 
-    findById(id: string, tenantId?: string): Promise<T | null>
+    findById(id: string): Promise<T | null>
 
-    delete(id: string | T, tenantId?: string): Promise<void>
+    delete(id: string | T): Promise<void>
 }

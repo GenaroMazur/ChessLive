@@ -1,15 +1,15 @@
 import "reflect-metadata"
 import "dotenv/config"
-import "./shared/utils/logger";
-import {container} from "tsyringe";
-import Core from "./infrastructure/Core";
-import {CloseProcessCallback} from "./shared/utils/closeProcess";
-import {logger} from "./shared/utils/logger";
-import GetEnv from "./shared/utils/getEnv";
-import IndexRoutes from "./infrastructure/handlers/http/index.routes";
-import ErrorController from "./infrastructure/handlers/http/Error.controller";
-import NotFoundController from "./infrastructure/handlers/http/NotFound.controller";
-import WsMessageHandler from "./infrastructure/handlers/websocket/WsMessage.handler";
+import "./infrastructure/config"
+import "./shared/utils/logger"
+import { container } from "tsyringe"
+import Core from "./infrastructure/Core"
+import { CloseProcessCallback } from "./shared/utils/closeProcess"
+import { logger } from "./shared/utils/logger"
+import IndexRoutes from "./infrastructure/handlers/http/index.routes"
+import ErrorController from "./infrastructure/handlers/http/Error.controller"
+import NotFoundController from "./infrastructure/handlers/http/NotFound.controller"
+import WsMessageHandler from "./infrastructure/handlers/websocket/WsMessage.handler"
 
 const isProduction = process.env?.NODE_ENV?.toLowerCase() === "production"
 if (!isProduction) {
@@ -17,10 +17,6 @@ if (!isProduction) {
     logger.warn("This is not recommended for production")
     logger.warn("Many security features are disabled and new passwords aren't safe")
 }
-
-container.registerInstance("REDIS_URL", GetEnv("REDIS_URL", true))
-container.registerInstance("PORT", GetEnv("TCP_PORT", true))
-container.registerInstance("DATABASE_URL", GetEnv("DATABASE_URL", true))
 
 const core = container.resolve(Core)
 

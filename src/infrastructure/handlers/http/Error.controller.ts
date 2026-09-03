@@ -1,6 +1,6 @@
-import {NextFunction, Response} from "express"
+import { NextFunction, Response } from "express"
 import SystemException from "../../../shared/exceptions/System.exception"
-import {baseLogger} from "../../../shared/utils/logger"
+import { baseLogger } from "../../../shared/utils/logger"
 import UserException from "../../../shared/exceptions/User.exception"
 
 const ErrorController = (err: SystemException, _: unknown, res: Response, next: NextFunction) => {
@@ -14,10 +14,10 @@ const ErrorController = (err: SystemException, _: unknown, res: Response, next: 
     // eslint-disable-next-line
     // @ts-ignore
     if (err.status === 400 && err.type === "entity.parse.failed")
-        return res.status(400).send({message: "Invalid JSON payload passed."})
+        return res.status(400).send({ message: "Invalid JSON payload passed." })
 
     if (err instanceof UserException)
-        return res.status(err.code || 400).send({message: err.message, ...err.body})
+        return res.status(err.code || 400).send({ message: err.message, ...err.body })
 
     baseLogger.error(err)
     res.status(500).send({

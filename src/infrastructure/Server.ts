@@ -1,11 +1,12 @@
-import {Server as http} from "http"
+import { Server as http } from "http"
 import helmet from "helmet"
 import cors from "cors"
-import {allowedOrigins, getCorsOptions} from "./handlers/http/Cors.config"
-import express, {Application} from "express"
-import {httpLogger} from "./handlers/http/httpLogger";
-import {container, inject, injectable} from "tsyringe";
-import {ILogger} from "../shared/utils/logger";
+import { allowedOrigins, getCorsOptions } from "./handlers/http/Cors.config"
+import express, { Application } from "express"
+import { httpLogger } from "./handlers/http/httpLogger"
+import { container, inject, injectable } from "tsyringe"
+import { ILogger } from "../shared/utils/logger"
+import cookieParser from "cookie-parser"
 
 @injectable()
 export default class Server {
@@ -13,14 +14,18 @@ export default class Server {
     public readonly application: Application
     private readonly logger: ILogger
 
-    constructor(@inject("PORT") private readonly PORT: number, @inject("Logger") logger: ILogger) {
+    constructor(
+        @inject("PORT") private readonly PORT: number,
+        @inject("Logger") logger: ILogger,
+    ) {
         this.http = new http()
         this.application = express()
         this.logger = logger.child("Server")
 
         this.application.use(httpLogger)
+        this.application.use(cookieParser())
         this.application.use(express.json())
-        this.application.use(express.urlencoded({extended: true}))
+        this.application.use(express.urlencoded({ extended: true }))
         this.application.use(cors(getCorsOptions()))
         this.application.use(
             helmet({
@@ -34,11 +39,11 @@ export default class Server {
                 },
                 crossOriginEmbedderPolicy: false,
                 crossOriginOpenerPolicy: true,
-                crossOriginResourcePolicy: {policy: "cross-origin"},
-                referrerPolicy: {policy: "strict-origin-when-cross-origin"},
+                crossOriginResourcePolicy: { policy: "cross-origin" },
+                referrerPolicy: { policy: "strict-origin-when-cross-origin" },
                 xssFilter: true,
                 noSniff: true,
-                frameguard: {action: "deny"},
+                frameguard: { action: "deny" },
                 hidePoweredBy: true,
             }),
         )

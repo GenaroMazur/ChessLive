@@ -1,10 +1,10 @@
-import {EventEmitter} from "node:events"
-import {WebSocket} from "ws"
-import {logger as Log} from "../../../shared/utils/logger";
+import { EventEmitter } from "node:events"
+import { WebSocket } from "ws"
+import { logger as Log } from "../../../shared/utils/logger"
 
 const logger = Log.child("WS")
 export default class Client extends EventEmitter<{
-    message: [object],
+    message: [object]
     close: []
 }> {
     private authTimeout: NodeJS.Timeout | null = null

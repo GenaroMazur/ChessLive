@@ -1,16 +1,16 @@
-import {createClient} from "redis"
-import {EventEmitter} from "node:events"
-import {container, inject, injectable} from "tsyringe";
-import {ILogger} from "../../shared/utils/logger";
+import { createClient } from "redis"
+import { EventEmitter } from "node:events"
+import { inject, injectable } from "tsyringe"
+import { ILogger } from "../../shared/utils/logger"
 
 @injectable()
 export default class RedisConnection extends EventEmitter<{
     /**
      * (message,channel)
      */
-    message: [string, string],
-    online: [],
-    error: [Error],
+    message: [string, string]
+    online: []
+    error: [Error]
     subscription_error: [Error]
 }> {
     private connection: ReturnType<typeof createClient> | null = null
@@ -18,7 +18,10 @@ export default class RedisConnection extends EventEmitter<{
     private subscribedChannels: Set<string> = new Set()
     private logger: ILogger
 
-    constructor(@inject("REDIS_URL") private readonly redisUrl: string = "", @inject("Logger") logger: ILogger) {
+    constructor(
+        @inject("REDIS_URL") private readonly redisUrl: string = "",
+        @inject("Logger") logger: ILogger,
+    ) {
         super()
         this.logger = logger.child("Redis_Connection")
     }
@@ -59,7 +62,9 @@ export default class RedisConnection extends EventEmitter<{
                         this.emit("message", message, chan)
                     })
                     .catch((err) =>
-                        this.logger.error(`Redis Subscription: error re-subscribing: ${err.message}`),
+                        this.logger.error(
+                            `Redis Subscription: error re-subscribing: ${err.message}`,
+                        ),
                     )
             }
         })
@@ -101,12 +106,12 @@ export default class RedisConnection extends EventEmitter<{
 
         this.connection
             .publish(channel, typeof message === "string" ? message : JSON.stringify(message))
-            .catch((err) => this.logger.error(`Redis Subscription: error publishing: ${err.message}`))
+            .catch((err) =>
+                this.logger.error(`Redis Subscription: error publishing: ${err.message}`),
+            )
     }
 
     public get caching() {
         return this.connection
     }
 }
-
-container.registerSingleton(RedisConnection)
