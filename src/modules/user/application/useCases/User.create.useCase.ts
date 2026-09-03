@@ -1,9 +1,9 @@
 import UserCreateDto from "../dtos/User.create.dto"
 import User from "../../domain/entity/User"
-import { inject, injectable } from "tsyringe"
+import {inject, injectable} from "tsyringe"
 import UserRepository from "../../domain/interfaces/User.repository"
 import EncryptService from "../../domain/interfaces/Encrypt.service"
-import { uuidv7 } from "uuidv7"
+import {uuidv7} from "uuidv7"
 import UserValidationException from "../../domain/exceptions/User.validation.exception"
 import {UserRatingType} from "../../domain/enums/User.Rating.Type.enum";
 import UserRating from "../../domain/entity/User.Rating";
@@ -13,7 +13,8 @@ export default class UserCreateUseCase {
     constructor(
         @inject("UserRepository") private readonly userRepository: UserRepository,
         @inject("EncryptService") private readonly encryptService: EncryptService,
-    ) {}
+    ) {
+    }
 
     async execute(dto: UserCreateDto) {
         const user = new User()
@@ -28,7 +29,7 @@ export default class UserCreateUseCase {
             lastName: dto.lastName,
         }
         Object.values(UserRatingType).forEach((type) => {
-            if(!user.ratings) user.ratings = {} as any
+            if (!user.ratings) user.ratings = {}
             user.ratings[type] = new UserRating()
         })
 

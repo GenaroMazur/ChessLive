@@ -4,6 +4,7 @@ import RedisConnection from "./cache/RedisConnection"
 import Server from "./Server"
 import WebSocketServer from "./WebSocket.server"
 import PostgresConnection from "./PostgresConnection"
+import WorkerManager from "./workers/WorkerManager";
 
 @injectable()
 export default class Core {
@@ -15,6 +16,7 @@ export default class Core {
         @inject("DataSource") private readonly postgresConnection: PostgresConnection,
         @inject(Server) public readonly server: Server,
         @inject(WebSocketServer) public readonly webSocketServer: WebSocketServer,
+        @inject(WorkerManager) public readonly workerManager: WorkerManager
     ) {
         this.logger = logger.child("Core")
     }
@@ -25,6 +27,7 @@ export default class Core {
 
         await this.server.start()
         this.webSocketServer.start()
+        this.workerManager.start()
 
         return this
     }
@@ -32,6 +35,7 @@ export default class Core {
     public async stop() {
         this.logger.info("Stopping core...")
 
+        await this.workerManager.stop()
         this.webSocketServer.stop()
         await this.server.stop()
 

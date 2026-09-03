@@ -14,7 +14,7 @@ export default class User {
         avatarUrl?: string
     }
 
-    ratings: Record<UserRatingType, UserRating>
+    ratings: Partial<Record<UserRatingType, UserRating>>
 
     createdAt: Date
     updatedAt: Date

@@ -20,7 +20,7 @@ import UserException from "./User.exception"
  *                  example: No autorizado para acceder a este recurso
  */
 export default class UnauthorizedException extends UserException {
-    constructor(message: string) {
+    constructor(message?: string) {
         super(message || "No autorizado para acceder a este recurso")
         this.name = "UnauthorizedException"
         this.code = 401
