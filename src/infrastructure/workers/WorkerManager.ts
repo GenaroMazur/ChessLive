@@ -5,9 +5,7 @@ import {inject, injectable} from "tsyringe";
 import {baseLogger, ILogger} from "../../shared/utils/logger";
 
 @injectable()
-export default class WorkerManager extends EventEmitter<{
-    matchFound: [gameId: string, player1Id: string, player2Id: string];
-}> {
+export default class WorkerManager extends EventEmitter{
     private worker: Worker | null = null;
     private readonly logger: ILogger;
 
@@ -25,14 +23,6 @@ export default class WorkerManager extends EventEmitter<{
         this.worker = new Worker(workerPath, isTs ? {
             execArgv: ["--import", "tsx"]
         } : undefined);
-
-        // Escuchar mensajes provenientes del hilo secundario
-        this.worker.on("message", (msg) => {
-            if (msg.type === "MATCH_FOUND") {
-                const {gameId, player1Id, player2Id} = msg.payload;
-                this.emit("matchFound", gameId, player1Id, player2Id);
-            }
-        });
 
         this.worker.on("error", (err) => {
             this.logger.error("Error no capturado en Worker Thread:");
