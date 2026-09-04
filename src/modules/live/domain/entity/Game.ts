@@ -11,11 +11,12 @@ export default class Game {
     timeControl: string
 
     result?: "WHITE" | "BLACK" | "DRAW"
-    reason?: "MATE" | "TIMEOUT" | "RESIGN" | "DRAW" | "INSUFFICIENT MATERIAL" | "STALEMATE"
+    reason?: "MATE" | "TIMEOUT" | "RESIGN" | "DRAW" | "INSUFFICIENT MATERIAL" | "STALEMATE" | "THREEFOLD REPETITION"
 
     gameInfo: {
-        clock: [number, number][]
+        clockSeconds: { w: number, b?: number }[]
     }
 
     createdAt: Date
+    updatedAt: Date
 }

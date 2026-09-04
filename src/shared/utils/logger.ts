@@ -47,19 +47,35 @@ export class Logger implements ILogger {
     }
 
     public info(msg: string, ...args: any[]): void {
-        this.logger.info(msg, ...args)
+        if (args.length > 0 && typeof args[0] === "object") {
+            this.logger.info(args[0], msg, ...args.slice(1))
+        } else {
+            this.logger.info(msg, ...args)
+        }
     }
 
     public error(msg: string, ...args: any[]): void {
-        this.logger.error(msg, ...args)
+        if (args.length > 0 && typeof args[0] === "object") {
+            this.logger.error(args[0], msg, ...args.slice(1))
+        } else {
+            this.logger.error(msg, ...args)
+        }
     }
 
     public warn(msg: string, ...args: any[]): void {
-        this.logger.warn(msg, ...args)
+        if (args.length > 0 && typeof args[0] === "object") {
+            this.logger.warn(args[0], msg, ...args.slice(1))
+        } else {
+            this.logger.warn(msg, ...args)
+        }
     }
 
     public debug(msg: string, ...args: any[]): void {
-        this.logger.debug(msg, ...args)
+        if (args.length > 0 && typeof args[0] === "object") {
+            this.logger.debug(args[0], msg, ...args.slice(1))
+        } else {
+            this.logger.debug(msg, ...args)
+        }
     }
 
     public child(name: string): ILogger {

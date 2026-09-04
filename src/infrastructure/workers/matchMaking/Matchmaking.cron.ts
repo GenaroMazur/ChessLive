@@ -5,7 +5,7 @@ import QueueElement from "../../../modules/live/domain/entity/QueueElement";
 import {uuidv7} from "uuidv7";
 import {clearTimeout} from "node:timers";
 import {baseLogger, ILogger} from "../../../shared/utils/logger";
-import Game from "../../../modules/game/domain/entity/Game";
+import Game from "../../../modules/live/domain/entity/Game";
 
 @injectable()
 /**
@@ -80,11 +80,12 @@ export default class MatchmakingCron extends EventEmitter<{
         game.id = uuidv7()
         game.whitePlayerId = member1.userId
         game.blackPlayerId = member2.userId
-        game.gameInfo = {clock: []}
+        game.gameInfo = {clockSeconds: []}
         game.moves = []
         game.timeControl = timeControl
         game.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         game.createdAt = new Date()
+        game.updatedAt = new Date()
 
         this.emit("matchFound", game)
     }
